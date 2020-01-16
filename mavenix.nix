@@ -39,6 +39,7 @@ let
     in ''
       mkdir -p "$(dirname ${path})"
       ln -sfv "${fetch}" "${path}"
+      echo -n "${sha1}" > "${path}.sha1"
     '';
 
   metadataToScript = remote: meta:
