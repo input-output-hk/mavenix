@@ -69,10 +69,10 @@ let
     metas ? [],
     remotes ? {},
     drvs ? [],
-    drvsInfo ? [],
     postHook ? "",
   }: let
     deps' = deps ++ (transDeps drvsInfo);
+    drvsInfo = transInfo drvs;
     metas' = metas ++ (transMetas drvsInfo);
     remotes' = (transRemotes drvsInfo) // remotes;
     remoteList = attrValues remotes';
@@ -177,16 +177,15 @@ let
 
       info = if build then importJSON infoFile else dummy-info;
       remotes' = (optionalAttrs (info?remotes) info.remotes) // remotes;
-      drvsInfo = transInfo drvs;
 
       emptyRepo = mkRepo {
-        inherit drvs drvsInfo;
+        inherit drvs;
         remotes = remotes';
       };
 
       repo = mkRepo {
         inherit (info) deps metas;
-        inherit drvs drvsInfo;
+        inherit drvs;
         remotes = remotes';
         postHook = postMkRepoHook;
       };
@@ -273,5 +272,5 @@ in rec {
     writeText "updated-lock" (
       toJSON ((x: x // f x) (importJSON infoFile))
     );
-  inherit buildMaven pkgs;
+  inherit buildMaven pkgs mkRepo;
 }
