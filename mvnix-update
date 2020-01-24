@@ -38,6 +38,7 @@ while test "$1";do
     -n|--no-add) no_add=1;;
     -v|--verbose) verbose=1;set -x;;
     -h|--help) usage;;
+    --) shift;break;;
     -*) usage "no option \"$1\"";;
     *) config="$1";;
   esac
@@ -132,6 +133,11 @@ remotes_repos=$(pq '
 
 tmp_lock_file="$WORK_DIR/tmp-mavenix.lock"
 lock_file="$(mq .infoFile)"
+
+echo >&2 "
+  Running tests...
+"
+mvn_ >&2 test -Dmaven.repo.local="$tmp_repo" "$@"
 
 echo >&2 "
   Resolving maven dependencies...
