@@ -100,7 +100,7 @@ mvn_out() { ns_ "$src_wd" mvn -B -nsu --settings "$settings" "$@"; }
 echo >&2 "
   Running mvn package...
 "
-mvn_ >&2 install -Dmaven.test.skip.exec=true -DskipTests -Dmaven.repo.local="$tmp_repo"
+mvn_ >&2 install -DskipTests -Dmaven.test.skip=true -Dmaven.repo.local="$tmp_repo"
 
 echo >&2 "
   Getting project info...
@@ -134,10 +134,10 @@ remotes_repos=$(pq '
 tmp_lock_file="$WORK_DIR/tmp-mavenix.lock"
 lock_file="$(mq .infoFile)"
 
-echo >&2 "
-  Running tests...
-"
-mvn_ >&2 test -Dmaven.repo.local="$tmp_repo" "$@"
+# echo >&2 "
+#   Running tests...
+# "
+# mvn_ >&2 test -Dmaven.repo.local="$tmp_repo" "$@"
 
 echo >&2 "
   Resolving maven dependencies...
