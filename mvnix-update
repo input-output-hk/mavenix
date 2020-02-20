@@ -23,7 +23,7 @@ EOF
 }
 
 # Setup work dir and cleanup
-WORK_DIR=$(mktemp -d --tmpdir mvnix-update.XXXXXX)
+WORK_DIR=$(mktemp -d --tmpdir mvnix-update.XXXXXX | xargs realpath)
 cleanup() { { chmod -R +w "$WORK_DIR"; rm -rf "$WORK_DIR"; } || true; }
 trap 'trap - EXIT; cleanup; kill -- $$' EXIT
 
