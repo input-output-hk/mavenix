@@ -14,6 +14,7 @@ usage() {
                               speed up consecutive runs, but might affect
                               lock file if POM is changed in between.
     -n, --no-add             Don't add dependencies to nix store
+    -t, --skip-tests         Skip the tests
     -v, --verbose            Verbose output
     -h, --help               Print usage
 
@@ -36,6 +37,7 @@ while test "$1";do
     -E|--exp) shift;expression="$1";;
     -s|--save-repo) shift;tmp_repo="$1";;
     -n|--no-add) no_add=1;;
+    -t|--skip-tests) skip_tests=1;;
     -v|--verbose) verbose=1;set -x;;
     -h|--help) usage;;
     --) shift;break;;
@@ -134,10 +136,12 @@ remotes_repos=$(pq '
 tmp_lock_file="$WORK_DIR/tmp-mavenix.lock"
 lock_file="$(mq .infoFile)"
 
-# echo >&2 "
-#   Running tests...
-# "
-# mvn_ >&2 test -Dmaven.repo.local="$tmp_repo" "$@"
+if [ -z ${skip_tests+x} ]; then 
+  echo >&2 "
+    Running tests...
+  "
+  mvn_ >&2 test -Dmaven.repo.local="$tmp_repo" "$@"
+fi
 
 echo >&2 "
   Resolving maven dependencies...
