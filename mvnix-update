@@ -148,7 +148,7 @@ if [[ ! ${generate_allure_report+x} ]]; then
   echo >&2 "
     Generating Allure report...
   "
-  mvn_ >&2 -N allure:report -Dmaven.repo.local="$tmp_repo" "$@"
+  mvn_ >&2 -N antrun:run@copy-allure-env-props allure:report -Dmaven.repo.local="$tmp_repo" "$@"
 fi
 
 echo >&2 "
