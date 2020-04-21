@@ -147,7 +147,7 @@ if [ ! ${skip_tests+x} ]; then
   mvn_ >&2 test -Dmaven.repo.local="$tmp_repo" "$@"
 fi
 
-if [ ${build_active_gen+x} ]; then 
+if [[ ${build_active_gen+x} ]]; then
   echo >&2 "
     Building Active-Gen submodule...
   "
