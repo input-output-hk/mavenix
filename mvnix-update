@@ -15,6 +15,7 @@ usage() {
                                     lock file if POM is changed in between.
     -n, --no-add                   Don't add dependencies to nix store
     -t, --skip-tests               Skip the tests
+    -a, --build-active-gen         Build Active-Gen submodule
     -r, --generate-allure-report   Generate Allure report
     -v, --verbose                  Verbose output
     -h, --help                     Print usage
@@ -39,6 +40,7 @@ while test "$1";do
     -s|--save-repo) shift;tmp_repo="$1";;
     -n|--no-add) no_add=1;;
     -t|--skip-tests) shift;skip_tests=1;;
+    -a|--build-active-gen) shift;build_active_gen=1;;
     -r|--generate-allure-report) shift;generate_allure_report=1;;
     -v|--verbose) verbose=1;set -x;;
     -h|--help) usage;;
@@ -143,6 +145,15 @@ if [ ! ${skip_tests+x} ]; then
     Running tests...
   "
   mvn_ >&2 test -Dmaven.repo.local="$tmp_repo" "$@"
+fi
+
+if [ ! ${build_active_gen+x} ]; then 
+  echo >&2 "
+    Building Active-Gen submodule...
+  "
+  cd active-gen/
+  mvn_ >&2 clean package -Dmaven.repo.local="$tmp_repo" "$@"
+  cd ../
 fi
 
 if [[ ${generate_allure_report+x} ]]; then
